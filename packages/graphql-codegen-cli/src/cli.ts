@@ -30,6 +30,11 @@ export async function runCli(cmd: string): Promise<number> {
     return 0;
   } catch (error) {
     await lifecycleHooks(context.getConfig().hooks).onError(error.toString());
+
+    if (context.getConfig().debug) {
+      printLogs();
+    }
+
     return 1;
   }
 }
