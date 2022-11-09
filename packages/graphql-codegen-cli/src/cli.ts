@@ -2,6 +2,7 @@ import { generate } from './generate-and-save.js';
 import { init } from './init/index.js';
 import { createContext } from './config.js';
 import { lifecycleHooks } from './hooks.js';
+import { printLogs } from './utils/debugging';
 
 export async function runCli(cmd: string): Promise<number> {
   await ensureGraphQlPackage();
@@ -14,6 +15,11 @@ export async function runCli(cmd: string): Promise<number> {
   const context = await createContext();
   try {
     await generate(context);
+
+    if (context.getConfig().debug) {
+      printLogs();
+    }
+
     if (context.checkMode && context.checkModeStaleFiles.length > 0) {
       // eslint-disable-next-line no-console
       console.log(
